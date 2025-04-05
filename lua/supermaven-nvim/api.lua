@@ -81,4 +81,20 @@ M.clear_log = function()
   end
 end
 
+M.trigger_completion = function()
+  local buffer = vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_buf_is_valid(buffer) then
+    return
+  end
+
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local context = {
+    document_text = table.concat(vim.api.nvim_buf_get_lines(buffer, 0, -1, false), "\n"),
+    cursor = cursor,
+    file_name = vim.api.nvim_buf_get_name(buffer),
+  }
+
+  require("supermaven-nvim.binary.binary_handler"):provide_inline_completion_items(buffer, cursor, context)
+end
+
 return M

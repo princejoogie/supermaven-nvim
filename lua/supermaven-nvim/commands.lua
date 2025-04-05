@@ -4,6 +4,10 @@ local log = require("supermaven-nvim.logger")
 local M = {}
 
 M.setup = function()
+  vim.api.nvim_create_user_command("SupermavenComplete", function()
+    api.trigger_completion()
+  end, {})
+
   vim.api.nvim_create_user_command("SupermavenStart", function()
     api.start()
   end, {})

@@ -12,6 +12,10 @@ M.setup = function(args)
   if config.disable_inline_completion then
     completion_preview.disable_inline_completion = true
   elseif not config.disable_keymaps then
+    if config.keymaps.trigger_completion ~= nil then
+      vim.keymap.set("i", config.keymaps.trigger_completion, "<cmd>SupermavenComplete<CR>", { noremap = true, silent = true })
+    end
+
     if config.keymaps.accept_suggestion ~= nil then
       local accept_suggestion_key = config.keymaps.accept_suggestion
       vim.keymap.set(
