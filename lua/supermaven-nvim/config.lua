@@ -1,6 +1,6 @@
 local default_config = {
   keymaps = {
-    trigger_completion = "<C-Space>",
+    trigger_completion = "<C-[>",
     accept_suggestion = "<Tab>",
     clear_suggestion = "<C-]>",
     accept_word = "<C-j>",
