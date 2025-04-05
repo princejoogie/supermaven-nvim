@@ -47,7 +47,7 @@ function supermaven_log() {
     error)   [[ "$level" == "ERROR" ]] && printf "${color}%s - %s - %s\033[0m\n" "$timestamp" "$level" "$message" ;;
     warn)    [[ "$level" =~ ^(ERROR|WARN)$ ]] && printf "${color}%s - %s - %s\033[0m\n" "$timestamp" "$level" "$message" ;;
     info)    [[ "$level" =~ ^(ERROR|WARN|INFO)$ ]] && printf "${color}%s - %s - %s\033[0m\n" "$timestamp" "$level" "$message" ;;
-    debug)   printf "${color}%s - %s - %s\033[0m\n" "$timestamp" "$level" "$message" ;;
+    debug)   echo "${color}%s - %s - %s\033[0m\n" "$timestamp" "$level" "$message" ;;
   esac
 }
 
