@@ -1,5 +1,6 @@
 # Get absolute path of script directory
 PLUGIN_DIR=${0:A:h}
+request_id=0
 
 # Load components
 source "${PLUGIN_DIR}/config.zsh"
@@ -29,18 +30,26 @@ function supermaven_init() {
   export SUPERMAVEN_INITIALIZED=1
 }
 
+function send_request() {
+  local request="$1"
+  local response=$("$SUPERMAVEN_BINARY" stdio <<<"$request")
+  echo "================="
+  echo "request: $request"
+  echo "----"
+  echo "response: $response"
+  echo "================="
+}
+
 function supermaven_trigger_completion() {
   local buffer="$BUFFER"
   local cursor_pos="$CURSOR"
   if [ -n "$SUPERMAVEN_BINARY" ]; then
-    # Create JSON request
-    local request=$(printf '{"newId":"","updates":[],"kind":"state_update","buffer":"%s","cursor":%d}\n' "$buffer" "$cursor_pos")
-
-    # Call binary and capture response
-    local response=$("$SUPERMAVEN_BINARY" stdio <<<"$request")
-
-    echo "DEBUG" "Triggering completion..."
-    echo "response: $response, request: $request"
+    ((request_id++))
+    local updates=$(printf '[{"kind":"cursor_update","offset":%d,"path":"zsh_completion"},{"content":"%s","kind":"file_update","path":"zsh_completion"}]' "$cursor_pos" "$buffer")
+    local request=$(printf '{"newId":"%d","updates":%s,"kind":"state_update","buffer":"%s","cursor":%d}\n' "$request_id" "$updates" "$buffer" "$cursor_pos")
+    send_request "$request"
+    request='{"kind":"inform_file_changed","path":"zsh_completion"}'
+    send_request "$request"
 
     # Parse response for completion text
     if [ $? -eq 0 ] && [ -n "$response" ]; then
